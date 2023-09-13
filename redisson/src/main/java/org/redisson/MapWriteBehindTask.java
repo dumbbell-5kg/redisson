@@ -96,7 +96,7 @@ public class MapWriteBehindTask {
         if (!deletedKeys.isEmpty()) {
             int leftDeleteAttempts = leftAttempts;
             while (leftDeleteAttempts > 0) {
-                try {
+                try { 
                     //remove successful part
                     final List<Object> noRetries = (List<Object>) retryableWriter.getNoRetriesForDelete();
                     if (!noRetries.isEmpty()) {
