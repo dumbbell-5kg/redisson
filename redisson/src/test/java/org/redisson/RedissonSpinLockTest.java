@@ -440,7 +440,7 @@ public class RedissonSpinLockTest extends BaseConcurrentTest {
             });
         });
         thread.start();
-        Thread.sleep(1_000);
+        Thread.sleep(1_000000000);
         assertThat(lockAsyncSucceed.get()).isFalse();
         lock.unlock();
         Thread.sleep(200);

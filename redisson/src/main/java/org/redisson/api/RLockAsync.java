@@ -58,7 +58,7 @@ public interface RLockAsync {
 
     /**
      * Acquires the lock.
-     * Waits if necessary until lock became available.
+     * Waits if necessary until lock became available.   //todo when will wait?
      * 
      * @return void
      */

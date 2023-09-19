@@ -106,14 +106,14 @@ public class RedissonSpinLock extends RedissonBaseLock {
         }
         RFuture<Long> ttlRemainingFuture = tryLockInnerAsync(internalLockLeaseTime,
                 TimeUnit.MILLISECONDS, threadId, RedisCommands.EVAL_LONG);
-
-        CompletionStage<Long> s = handleNoSync(threadId, ttlRemainingFuture);
+        //有异常则释放锁，处理释放分布式锁时可能出现的同步问题，为了增加分布式锁操作的健壮性和可靠性。
+        CompletionStage<Long> s = handleNoSync(threadId, ttlRemainingFuture);//handle是CompletionStage.handle的意思
         ttlRemainingFuture = new CompletableFutureWrapper<>(s);
 
         ttlRemainingFuture.thenAccept(ttlRemaining -> {
             // lock acquired
-            if (ttlRemaining == null) {
-                scheduleExpirationRenewal(threadId);
+            if (ttlRemaining == null) {//表示107行的lua脚本返回了null，则表示锁获取成功了
+                scheduleExpirationRenewal(threadId);//过期自动续约，以免在用锁时到期了（为什么不一开始设置为无期限？我觉得是担心锁的泄露吧，毕竟客户端如果暴死，总不能在redis里留下一些锁吧）
             }
         });
         return ttlRemainingFuture;
