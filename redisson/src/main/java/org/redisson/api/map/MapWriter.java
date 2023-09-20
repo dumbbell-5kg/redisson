@@ -26,33 +26,10 @@ import java.util.Map;
  * @param <K> key type
  * @param <V> value type
  */
-public abstract class MapWriter<K, V> extends RetryableWriter {
+public interface MapWriter<K, V> {
 
-    public MapWriter() {
-        super();
-    }
-
-    public MapWriter(int retryAttempts) {
-        super(retryAttempts);
-    }
-
-    public MapWriter(int retryAttempts, long retryInterval) {
-        super(retryAttempts, retryInterval);
-    }
-
-    public abstract void write(Map<K, V> map);
-
-    public abstract void delete(Collection<K> keys);
-
-    @Override
-    public Object getNoRetriesForWrite() {
-        //todo
-        return null;
-    }
-
-    @Override
-    public Object getNoRetriesForDelete() {
-        //todo
-        return null;
-    }
+    void write(Map<K, V> map);
+    
+    void delete(Collection<K> keys);
+    
 }
