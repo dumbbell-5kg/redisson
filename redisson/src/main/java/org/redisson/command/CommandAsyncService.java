@@ -859,11 +859,11 @@ public class CommandAsyncService implements CommandAsyncExecutor {
     }
 
     @Override
-    public <T> RFuture<T> syncedEval(String key, Codec codec, RedisCommand<T> evalCommandType, String script, List<Object> keys, Object... params) {
+    public <T> RFuture<T> syncedEval(String key, Codec codec, RedisCommand<T> evalCommandType, String script, List<Object> keys, Object... params) {//这个方法为什么名字叫做syncedEval，但是却返回了一个RFuture，那么synced体现在什么地方呢？ 指的是这个方法会保证命令被至少1个slava同步了。
         CompletionStage<Map<String, String>> replicationFuture = CompletableFuture.completedFuture(Collections.emptyMap());
         if (!getServiceManager().getCfg().isSingleConfig()
                 && !(this instanceof CommandBatchService)) {
-            replicationFuture = writeAsync(key, RedisCommands.INFO_REPLICATION);
+            replicationFuture = writeAsync(key, RedisCommands.INFO_REPLICATION);//查询复制集信息
         }
         CompletionStage<T> resFuture = replicationFuture.thenCompose(r -> {
             int availableSlaves = Integer.parseInt(r.getOrDefault("connected_slaves", "0"));
@@ -882,7 +882,7 @@ public class CommandAsyncService implements CommandAsyncExecutor {
                 if (getServiceManager().getCfg().isCheckLockSyncedSlaves()
                         && res.getSyncedSlaves() == 0 && availableSlaves > 0) {
                     throw new CompletionException(
-                            new IllegalStateException("None of slaves were synced"));
+                            new IllegalStateException("None of slaves were synced"));//在执行的是上锁的命令时，这里保证了锁在从节点上也是同步的，以确保在故障转移(failover)发生时，锁任然可用。
                 }
 
                 return getNow(result.toCompletableFuture());

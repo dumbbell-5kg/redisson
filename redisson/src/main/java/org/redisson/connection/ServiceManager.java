@@ -396,7 +396,7 @@ public class ServiceManager {
         });
     }
 
-    public <T> RFuture<T> execute(Supplier<CompletionStage<T>> supplier) {
+    public <T> RFuture<T> execute(Supplier<CompletionStage<T>> supplier) {//supplier:() -> tryAcquireAsync(waitTime, leaseTime, unit, threadId)
         CompletableFuture<T> result = new CompletableFuture<>();
         int retryAttempts = config.getRetryAttempts();
         AtomicInteger attempts = new AtomicInteger(retryAttempts);
