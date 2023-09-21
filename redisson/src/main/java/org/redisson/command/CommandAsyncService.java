@@ -831,7 +831,7 @@ public class CommandAsyncService implements CommandAsyncExecutor {
         return poll(codec, ref, names, counter, command);
     }
 
-    public <T> CompletionStage<T> handleNoSync(CompletionStage<T> stage, Supplier<CompletionStage<?>> supplier) {
+    public <T> CompletionStage<T> handleNoSync(CompletionStage<T> stage, Supplier<CompletionStage<?>> supplier) {//处理None of slaves were synced
         CompletionStage<T> s = stage.handle((r, ex) -> {
             if (ex != null) {
                 if (ex.getCause().getMessage().equals("None of slaves were synced")) {
@@ -849,7 +849,7 @@ public class CommandAsyncService implements CommandAsyncExecutor {
                 }
             }
             return CompletableFuture.completedFuture(r);
-        }).thenCompose(f -> (CompletionStage<T>) f);
+        }).thenCompose(f -> (CompletionStage<T>) f);//类型转换
         return s;
     }
 
