@@ -380,7 +380,7 @@ public class RedissonLock extends RedissonBaseLock {
     }
 
     private void lockAsync(long leaseTime, TimeUnit unit,
-                           RedissonLockEntry entry, CompletableFuture<Void> result, long currentThreadId) {
+                           RedissonLockEntry entry, CompletableFuture<Void> result, long currentThreadId) {//让我看这个方法
         RFuture<Long> ttlFuture = tryAcquireAsync0(-1, leaseTime, unit, currentThreadId);
         ttlFuture.whenComplete((ttl, e) -> {
             if (e != null) {
