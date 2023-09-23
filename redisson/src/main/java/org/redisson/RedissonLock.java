@@ -571,6 +571,21 @@ public class RedissonLock extends RedissonBaseLock {
                 }
         });
     }
+    //例子
+    public static void main(String[] args) {
+        CompletableFuture completableFuture = new CompletableFuture();
+        completableFuture.thenCompose((x) -> {
+            System.out.println("kkkkkkk" + Thread.currentThread());//main
+            CompletableFuture result = new CompletableFuture();
+            Thread thread = new Thread(() -> {//main线程启动了thread，继续往下走
+                result.complete(null);
+            }, "aaaa");
+            thread.start();
+            return result;//main线程到这里就结束了
+        }).thenAccept((x) -> {
+            System.out.println(Thread.currentThread());//aaa
 
-
+        });
+        completableFuture.complete(null);
+    }
 }
