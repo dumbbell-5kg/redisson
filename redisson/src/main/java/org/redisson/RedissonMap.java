@@ -1172,13 +1172,13 @@ public class RedissonMap<K, V> extends RedissonExpirable implements RMap<K, V> {
     protected RFuture<V> getAsync(K key, long threadId) {
         checkKey(key);
 
-        RFuture<V> future = getOperationAsync(key);
+        RFuture<V> future = getOperationAsync(key);//这个方法中的两个重要动作：连接Redis（同步发送，但用ChannelFuture不会阻塞等待结果），发送请求给redis(同步发送，但使用netty的ChannelFuture不会阻塞等待结果)，
         if (hasNoLoader()) {
             return future;
         }
 
         CompletionStage<V> f = future.thenCompose(res -> {
-            if (res == null) {
+            if (res == null) {// read-through 策略，先读future(redis)，没有就loadValue从数据库读取。
                 return loadValue(key, false, threadId);
             }
             return CompletableFuture.completedFuture(res);
@@ -1198,7 +1198,7 @@ public class RedissonMap<K, V> extends RedissonExpirable implements RMap<K, V> {
         }
 
         if (options.getLoaderAsync() != null) {
-            return loadAllAsync(options.getLoaderAsync().loadAllKeys(), replaceExistingValues, parallelism);
+            return loadAllAsync(options.getLoaderAsync().loadAllKeys(), replaceExistingValues, parallelism);//只有这一个方法用到了loadAllKeys
         }
 
         return loadAllAsync(() -> options.getLoader().loadAllKeys().spliterator(), replaceExistingValues, parallelism);
@@ -1723,7 +1723,7 @@ public class RedissonMap<K, V> extends RedissonExpirable implements RMap<K, V> {
             if (replaceValue) {
                 return loadValue(key, lock, threadId);
             }
-            
+            //getOperationAsync再次向redis发请求
             return getOperationAsync(key).thenCompose(r -> {
                 if (r != null) {
                     return lock.unlockAsync(threadId).thenApply(v -> r);
@@ -1731,7 +1731,7 @@ public class RedissonMap<K, V> extends RedissonExpirable implements RMap<K, V> {
                 
                 return loadValue(key, lock, threadId);
             });
-        }).whenComplete((r, e) -> {
+        }).whenComplete((r, e) -> {//loadValue(key, lock, threadId)完成
             if (e != null) {
                 lock.unlockAsync(threadId);
             }

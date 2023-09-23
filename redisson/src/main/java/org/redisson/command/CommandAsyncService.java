@@ -158,7 +158,7 @@ public class CommandAsyncService implements CommandAsyncExecutor {
         }
     }
 
-    protected <R> CompletableFuture<R> createPromise() {
+    protected <R> CompletableFuture<R> createPromise() {//在netty中  Promise<V> extends Future<V>，可以当作Future
         return new CompletableFuture<R>();
     }
 
