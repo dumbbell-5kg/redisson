@@ -1172,7 +1172,7 @@ public class RedissonMap<K, V> extends RedissonExpirable implements RMap<K, V> {
     protected RFuture<V> getAsync(K key, long threadId) {
         checkKey(key);
 
-        RFuture<V> future = getOperationAsync(key);//这个方法中的两个重要动作：连接Redis（同步发送，但用ChannelFuture不会阻塞等待结果），发送请求给redis(同步发送，但使用netty的ChannelFuture不会阻塞等待结果)，
+        RFuture<V> future = getOperationAsync(key); //这个方法中的两个重要动作：连接Redis（同步发送，但用ChannelFuture不会阻塞等待结果），发送请求给redis(同步发送，但使用netty的ChannelFuture不会阻塞等待结果)，
         if (hasNoLoader()) {
             return future;
         }
@@ -1198,7 +1198,7 @@ public class RedissonMap<K, V> extends RedissonExpirable implements RMap<K, V> {
         }
 
         if (options.getLoaderAsync() != null) {
-            return loadAllAsync(options.getLoaderAsync().loadAllKeys(), replaceExistingValues, parallelism);//只有这一个方法用到了loadAllKeys
+            return loadAllAsync(options.getLoaderAsync().loadAllKeys(), replaceExistingValues, parallelism); //只有这一个方法用到了loadAllKeys
         }
 
         return loadAllAsync(() -> options.getLoader().loadAllKeys().spliterator(), replaceExistingValues, parallelism);

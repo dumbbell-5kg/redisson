@@ -14,7 +14,7 @@ public class RedissonRuntimeEnvironment {
     public static final String OS;
     public static final boolean isWindows;
     private static final String MAC_PATH = "/usr/local/opt/redis/bin/redis-server";
-    private static final String WINDOW_PATH = "C:\\redis\\redis-server.exe";
+    private static final String WINDOW_PATH = "D:\\zzh\\redis\\Redis-x64-5.0.14.1\\redis-server.exe";
 
     static {
         OS = System.getProperty("os.name", "generic");

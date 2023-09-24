@@ -849,7 +849,7 @@ public class CommandAsyncService implements CommandAsyncExecutor {
                 }
             }
             return CompletableFuture.completedFuture(r);
-        }).thenCompose(f -> (CompletionStage<T>) f);//类型转换
+        }).thenCompose(f -> (CompletionStage<T>) f); //类型转换
         return s;
     }
 
@@ -863,7 +863,7 @@ public class CommandAsyncService implements CommandAsyncExecutor {
         CompletionStage<Map<String, String>> replicationFuture = CompletableFuture.completedFuture(Collections.emptyMap());
         if (!getServiceManager().getCfg().isSingleConfig()
                 && !(this instanceof CommandBatchService)) {
-            replicationFuture = writeAsync(key, RedisCommands.INFO_REPLICATION);//查询复制集信息
+            replicationFuture = writeAsync(key, RedisCommands.INFO_REPLICATION); //查询复制集信息
         }
         CompletionStage<T> resFuture = replicationFuture.thenCompose(r -> {
             int availableSlaves = Integer.parseInt(r.getOrDefault("connected_slaves", "0"));
@@ -873,7 +873,7 @@ public class CommandAsyncService implements CommandAsyncExecutor {
             if (executorService == this) {
                 return result;
             }
-
+            //这一行真正的用netty发送了请求，将result变为Done
             RFuture<BatchResult<?>> future = executorService.executeAsync();
             CompletionStage<T> f = future.handle((res, ex) -> {
                 if (ex != null) {
@@ -882,7 +882,7 @@ public class CommandAsyncService implements CommandAsyncExecutor {
                 if (getServiceManager().getCfg().isCheckLockSyncedSlaves()
                         && res.getSyncedSlaves() == 0 && availableSlaves > 0) {
                     throw new CompletionException(
-                            new IllegalStateException("None of slaves were synced"));//在执行的是上锁的命令时，这里保证了锁在从节点上也是同步的，以确保在故障转移(failover)发生时，锁任然可用。
+                            new IllegalStateException("None of slaves were synced")); //在执行的是上锁的命令时，这里保证了锁在从节点上也是同步的，以确保在故障转移(failover)发生时，锁任然可用。
                 }
 
                 return getNow(result.toCompletableFuture());

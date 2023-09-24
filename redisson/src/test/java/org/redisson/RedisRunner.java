@@ -1016,7 +1016,7 @@ public class RedisRunner {
     public static RedisRunner.RedisProcess startDefaultRedisServerInstance() throws IOException, InterruptedException, FailedToStartRedisException {
         if (defaultRedisInstance == null) {
             System.out.println("REDIS RUNNER: Starting up default instance...");
-            defaultRedisInstance = new RedisRunner().nosave().randomDir().randomPort().run();
+            defaultRedisInstance = new RedisRunner().nosave().dir("D:\\zzh\\redis\\redisson").port(6379).run();
         }
         return defaultRedisInstance;
     }
