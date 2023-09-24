@@ -36,6 +36,10 @@ public class RetryableMapWriterAsync<K, V> implements MapWriterAsync<K, V> {
 
     private ServiceManager serviceManager;
 
+    public void setServiceManager(ServiceManager serviceManager) {
+        this.serviceManager = serviceManager;
+    }
+
     public RetryableMapWriterAsync(MapOptions<K, V> options, MapWriterAsync<K, V> mapWriterAsync) {
         this.options = options;
         this.mapWriterAsync = mapWriterAsync;
@@ -105,10 +109,5 @@ public class RetryableMapWriterAsync<K, V> implements MapWriterAsync<K, V> {
         );
     }
 
-    public RetryableMapWriterAsync<K, V> withServiceManager(ServiceManager serviceManager) {
-        if (this.serviceManager == null) {
-            this.serviceManager = serviceManager;
-        }
-        return this;
-    }
+
 }
