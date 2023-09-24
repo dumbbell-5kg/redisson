@@ -101,9 +101,7 @@ public class MapWriteBehindTask {
                 if (options.getWriter() != null) {
                     options.getWriter().write(addedMap);
                 } else {
-                    ((RetryableMapWriterAsync<Object, Object>) options.getWriterAsync())
-                            .withServiceManager(commandExecutor.getServiceManager())
-                            .write(addedMap).toCompletableFuture().join();
+                    options.getWriterAsync().write(addedMap).toCompletableFuture().join();
                 }
                 addedMap.clear();
             }
