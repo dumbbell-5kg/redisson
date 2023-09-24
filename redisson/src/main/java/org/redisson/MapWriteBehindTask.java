@@ -135,7 +135,7 @@ public class MapWriteBehindTask {
         } else {
             for (Entry<Object, Object> entry : task.getMap().entrySet()) {
                 try {
-                    addedMap.put(entry.getKey(), entry.getValue());
+                    addedMap.put(entry.getKey(), entry.getValue());//官网里对于write-behind的工作原理有这么一段话。那么实现原理就是在addedMap里覆盖同key的值Second, to improve performance, write-behind caching uses a technique known as conflation, in which changes to the cache are consolidated in order to limit the number of transactions needed to update the database. For example, if a value is changed from 1 to 2 in the cache, and then later from 2 to 3, the database will only be updated to change the value from 1 to 3.
                     if (addedMap.size() == options.getWriteBehindBatchSize()) {
                         if (options.getWriter() != null) {
                             options.getWriter().write(addedMap);
