@@ -98,7 +98,7 @@ public class RetryableMapWriterAsync<K, V> implements MapWriterAsync<K, V> {
                         return;
                     }
 
-                    log.warn("Unable to add keys: {}, will retry after {}ms", keys, options.getWriterRetryInterval(), e);
+                    log.warn("Unable to delete keys: {}, will retry after {}ms", keys, options.getWriterRetryInterval(), e);
                     serviceManager.newTimeout(t -> retryDelete(leftAttempts - 1, keys, result),
                             options.getWriterRetryInterval(), TimeUnit.MILLISECONDS);
                 }
