@@ -1562,7 +1562,7 @@ public abstract class BaseMapTest extends BaseTest {
     public void testLoadAllReplaceValues() {
         Map<String, String> cache = new HashMap<>();
         for (int i = 0; i < 10; i++) {
-            cache.put("" + i, "" + i + "" + i);
+            cache.put("" + i, "" + i + "" + i );
         }
         
         RMap<String, String> map = getLoaderTestMap("test", cache);
