@@ -1554,7 +1554,7 @@ public abstract class BaseMapTest extends BaseTest {
 
         //assert delete retry times
         assertThat(actualRetryTimes.get()).isEqualTo(expectedRetryAttempts);
-        destroy( map);
+        destroy(  map);
     }
 
 
